@@ -23,7 +23,7 @@ const Form = () => {
       <div className='form-container'>
         <span className='close-btn'>×</span>
         <div className='form-content-left'>
-          <img className='form-img' src='img/img-1.jpg' alt='spaceship' />
+          <img className='form-img' src='img/img-3.jpg' alt='spaceship' />
         </div>
           <Formulario/>
         

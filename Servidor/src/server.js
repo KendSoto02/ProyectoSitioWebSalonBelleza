@@ -83,7 +83,7 @@ app.get('/obtener-datos', (req, res) => {
       res.status(500).send('Error de servidor');
     } else {
       const request = new sql.Request();
-      const query = 'SELECT * FROM formulario';
+      const query = 'EXEC mostrarCitas';  // Llamada al procedimiento almacenado
       request.query(query, (err, result) => {
         if (err) {
           console.log(err);
@@ -95,6 +95,37 @@ app.get('/obtener-datos', (req, res) => {
     }
   });
 });
+
+
+app.post('/insertar-datos', (req, res) => {
+  // Obtener los datos del cuerpo de la solicitud
+  //const datos = req.body;
+  const { imagen, descripcion, precio } = req.body;
+  // Conectar a la base de datos y guardar los datos
+  sql.connect(config, err => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error de servidor');
+    } else {
+      const request = new sql.Request();
+
+      // Configurar los parámetros del stored procedure
+      request.input('Descripcion', sql.NVarChar(100), descripcion);
+      request.input('Precio', sql.Money, precio);
+
+      // Ejecutar el stored procedure
+      request.execute('InsertarServicio', (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Error de servidor');
+        } else {
+          res.status(200).send('Datos creados correctamente');
+        }
+      });
+    }
+  });
+});
+
 
 
 

@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import "./formLogIn.css";
-import validate from '../Validations/validateInfo';
-import useForm from '../Validations/useForm';
+
 function Formulario({ submitForm }) {
-  const { handleChange, handleSubmit, values, errors } = useForm(
-    submitForm,
-    validate
-  );
+
 
   const [nombre, setNombre] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -58,7 +54,6 @@ function Formulario({ submitForm }) {
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
           />
-          {errors.nombre && <p>{errors.nombre}</p>}
         </div>
         <div className="form-inputs">
           <label className="form-label">Teléfono:</label>
@@ -70,7 +65,6 @@ function Formulario({ submitForm }) {
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
           />
-          {errors.telefono && <p>{errors.telefono}</p>}
         </div>
         <div className="form-inputs">
           <label className="form-label">Fecha:</label>
@@ -125,7 +119,7 @@ function Formulario({ submitForm }) {
           </select>
         </div>
         <button className="form-input-btn" type="submit">
-          Enviar
+          Agendar Cita
         </button>
       </form>
     </div>
