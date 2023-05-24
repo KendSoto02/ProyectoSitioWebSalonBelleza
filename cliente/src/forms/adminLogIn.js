@@ -19,7 +19,8 @@ const LoginForm = () => {
 
     // Compara el username y password ingresados con los valores correctos
 
-    // Ejemplo de validación simple
+    // Validación
+    //Despues se hara con el servidor
     if (username === "Lady" && password === "123456") {
       // Inicio de sesión exitoso
       setErrorMessage("");

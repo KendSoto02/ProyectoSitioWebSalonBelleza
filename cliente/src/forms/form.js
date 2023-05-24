@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import "./formLogIn.css";
 
 function Formulario({ submitForm }) {
-
-
   const [nombre, setNombre] = useState("");
   const [telefono, setTelefono] = useState("");
   const [fecha, setFecha] = useState("");
@@ -11,7 +9,22 @@ function Formulario({ submitForm }) {
   const [servicio, setServicio] = useState("");
   const [producto, setProducto] = useState("");
 
-  const enviarDatos = () => {
+  const enviarDatos = (e) => {
+    e.preventDefault();
+
+    // Validar que no haya campos en blanco
+    if (
+      nombre.trim() === "" ||
+      telefono.trim() === "" ||
+      fecha.trim() === "" ||
+      hora.trim() === "" ||
+      servicio.trim() === "" ||
+      producto.trim() === ""
+    ) {
+      alert("Por favor, asegurate de llenar todos los campos");
+      return;
+    }
+
     // Combina la fecha y la hora en un solo campo
     const fechaHora = new Date(`${fecha}T${hora}`);
     // Convierte la fecha y hora en formato ISO 8601 para que sea compatible con SQL Server
@@ -31,7 +44,8 @@ function Formulario({ submitForm }) {
       .then((response) => response.text())
       .then((result) => alert(result))
       .catch((error) => console.log(error));
-      // alert('Su cita fue guardada correctamente');
+
+    // Restablecer los campos después de enviar los datos
     setNombre("");
     setTelefono("");
     setFecha("");

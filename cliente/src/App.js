@@ -8,7 +8,7 @@ import FormIngresarServicio from './forms/FormIngresarServicio';
 function App() {
   return (
     <div className="App">
-    <FormIngresarServicio/>
+    <Form/>
     </div>
   );
 }
