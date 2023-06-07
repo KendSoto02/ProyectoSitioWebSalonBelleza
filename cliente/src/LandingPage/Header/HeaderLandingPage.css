@@ -1,0 +1,109 @@
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fbecef;
+  color: #de387d;
+}
+
+/* Logo */
+.logo img {
+  width: 100px;
+  height: 100px;
+}
+
+/* Menú de navegación */
+.navigation {
+  font-size: 1.2rem;
+}
+
+.menu {
+  list-style: none;
+  display: flex;
+}
+
+.menu li {
+  margin-right: 1rem;
+  position: relative; /* Agregar posición relativa */
+}
+
+.menu li a {
+  color: #de387d;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.menu li a:hover {
+  color: #f9d5dc;
+}
+
+/* Submenú */
+.submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: none;
+  list-style: none;
+  background-color: #fbecef;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+}
+
+.menu li:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  margin-bottom: 0.5rem;
+}
+
+.submenu li a {
+  color: #de387d;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.submenu li a:hover {
+  color: #f9d5dc;
+}
+
+/* Iconos de redes sociales */
+/* .social-icons {
+  display: flex;
+  align-items: center;
+} */
+
+.social-icons a {
+  margin-right: 0.9rem;
+}
+
+
+
+
+
+.social-icon {
+  font-size: 24px;
+}
+
+.facebook-icon {
+  color: blue;
+}
+
+.tiktok-icon {
+  color: black;
+}
+
+.instagram-icon {
+  color: rgb(248, 128, 248);
+}
+
+.youtube-icon{
+  color: red;
+}
+
+.whatsapp-icon{
+  color: green;
+}

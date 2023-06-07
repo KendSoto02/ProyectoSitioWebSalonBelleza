@@ -1,37 +1,33 @@
-import React, { useState } from "react";
-import "./FormIngresarServicio.css";
-import HeaderLandingPage from "../LandingPage/Header/HeaderLandingPage";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import "../../forms/FormIngresarServicio.css";
+import Header from "../../Header/HeaderAdmin";
+import { useNavigate } from "react-router-dom";
 
-const FormularioAgendarCita = ({ submitForm }) => {
-  const [nombre, setNombre] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [fecha, setFecha] = useState("");
-  const [hora, setHora] = useState("");
-  const [servicio, setServicio] = useState("");
-  const [producto, setProducto] = useState("");
+const EditarReservacion = () => {
+  const location = useLocation();
+  const { item } = location.state;
+  const navigate = useNavigate();
+
+  const [fecha, setFecha] = useState(item.FechaHora.substring(0, 10)); // Obtiene los primeros 10 caracteres que representan la fecha
+  const [hora, setHora] = useState(item.FechaHora.substring(11, 16)); // Obtiene los caracteres de 11 a 16 que representan la hora
+  const [nombre, setNombre] = useState(item.NombreCliente);
+  const [telefono, setTelefono] = useState(item.MedioContactoCliente);
+  const [servicio, setServicio] = useState(item.Descripcion);
+  const [producto, setProducto] = useState(item.NombreProducto);
 
   const enviarDatos = (e) => {
     e.preventDefault();
 
     // Validar que no haya campos en blanco
-    if (
-      nombre.trim() === "" ||
-      telefono.trim() === "" ||
-      fecha.trim() === "" ||
-      hora.trim() === "" ||
-      servicio.trim() === ""
-    ) {
-      alert("Por favor, asegúrate de llenar todos los campos");
-      return;
-    }
 
     // Combina la fecha y la hora en un solo campo
     const fechaHora = new Date(`${fecha}T${hora}`);
     // Convierte la fecha y hora en formato ISO 8601 para que sea compatible con SQL Server
     const fechaHoraISO = fechaHora.toISOString();
 
-    fetch("http://localhost:3001/enviar-datos", {
-      method: "POST",
+    fetch(`http://localhost:3001/editar-reservacion/${item.ReservarCitaID}`, {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nombre,
@@ -42,7 +38,11 @@ const FormularioAgendarCita = ({ submitForm }) => {
       }),
     })
       .then((response) => response.text())
-      .then((result) => alert(result))
+      .then((result) => {
+        alert(result);
+        // Redireccionar a "/admin" después de realizar las acciones
+        navigate("/admin");
+      })
       .catch((error) => console.log(error));
 
     // Restablecer los campos después de enviar los datos
@@ -56,10 +56,10 @@ const FormularioAgendarCita = ({ submitForm }) => {
 
   return (
     <div>
-      <HeaderLandingPage />
+      <Header />
       <div className="formulario-container">
         <div className="card">
-          <h2 className="agendar-h2">Agendar Cita</h2>
+          <h2 className="agendar-h2">Editar Reservación</h2>
           <form onSubmit={enviarDatos}>
             <div className="form-group">
               <label htmlFor="nombre">Nombre:</label>
@@ -102,7 +102,7 @@ const FormularioAgendarCita = ({ submitForm }) => {
                 <option value="Corte de Cabello Mujer">
                   Corte de Cabello Mujer
                 </option>
-                <option value="Pintar Pelo">Pintar Pelo</option>
+                <option value="Pintar pelo">Pintar Pelo</option>
               </select>
             </div>
             <div className="form-group">
@@ -147,7 +147,7 @@ const FormularioAgendarCita = ({ submitForm }) => {
                 required
               />
             </div>
-            <button type="submit">Agendar Cita</button>
+            <button type="submit">Editar Cita</button>
           </form>
         </div>
       </div>
@@ -155,4 +155,4 @@ const FormularioAgendarCita = ({ submitForm }) => {
   );
 };
 
-export default FormularioAgendarCita;
+export default EditarReservacion;

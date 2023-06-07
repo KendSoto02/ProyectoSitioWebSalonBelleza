@@ -2,23 +2,28 @@ import React, { useState } from "react";
 import "./FormIngresarServicio.css";
 import Header from "../Header/HeaderAdmin";
 
-const FormIngresarServicio = () => {
-  const [FotoLink, setFotoLink] = useState("");
+const FormIngresarProducto = () => {
+  const [nombreProducto, setNombreProducto] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [foto, setFoto] = useState("");
   const [precio, setPrecio] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(FotoLink);
 
     // Mostrar ventana emergente de confirmación
-    const confirmed = window.confirm("¿Estás seguro ingresar este servicio?");
+    const confirmed = window.confirm("¿Estás seguro de ingresar este Producto?");
 
     if (confirmed) {
       // Realizar la solicitud POST con los datos
-      fetch("http://localhost:3001/insertar-servicios", {
+      fetch("http://localhost:3001/insertar-productos", {
         method: "POST",
-        body: JSON.stringify({ descripcion, precio, FotoLink }),
+        body: JSON.stringify({
+          NombreProducto: nombreProducto,
+          Descripcion: descripcion,
+          Foto: foto,
+          Precio: precio,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -28,8 +33,9 @@ const FormIngresarServicio = () => {
         .catch((error) => console.log(error));
 
       // Restablecer los campos del formulario
-      setFotoLink("");
+      setNombreProducto("");
       setDescripcion("");
+      setFoto("");
       setPrecio("");
     }
   };
@@ -39,16 +45,16 @@ const FormIngresarServicio = () => {
       <Header />
       <div className="formulario-container">
         <div className="card">
-          <h2 className="agendar-h2">Ingresar Servicio</h2>
+          <h2 className="agendar-h2">Ingresar Producto</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="urlImagen">URL de la imagen:</label>
+              <label htmlFor="nombreProducto">Nombre del producto:</label>
               <input
                 type="text"
-                id="urlImagen"
-                name="urlImagen"
-                value={FotoLink}
-                onChange={(e) => setFotoLink(e.target.value)}
+                id="nombreProducto"
+                name="nombreProducto"
+                value={nombreProducto}
+                onChange={(e) => setNombreProducto(e.target.value)}
                 required
               />
             </div>
@@ -64,6 +70,17 @@ const FormIngresarServicio = () => {
               />
             </div>
             <div className="form-group">
+              <label htmlFor="foto">Foto:</label>
+              <input
+                type="text"
+                id="foto"
+                name="foto"
+                value={foto}
+                onChange={(e) => setFoto(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
               <label htmlFor="precio">Precio:</label>
               <input
                 type="number"
@@ -74,7 +91,7 @@ const FormIngresarServicio = () => {
                 required
               />
             </div>
-            <button type="submit">Agregar Servicio</button>
+            <button type="submit">Agregar Producto</button>
           </form>
         </div>
       </div>
@@ -82,4 +99,4 @@ const FormIngresarServicio = () => {
   );
 };
 
-export default FormIngresarServicio;
+export default FormIngresarProducto;

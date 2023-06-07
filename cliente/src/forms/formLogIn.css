@@ -79,7 +79,7 @@
 }
 
 .form-inputs {
-	margin-bottom: 0.4rem;
+	margin-bottom: 0.5rem;
 	width: 80%;
 }
 
@@ -101,7 +101,7 @@
 	padding-left: 10px;
 	outline: none;
 	border-radius: 2px;
-	height: 40px;
+	height: 18px;
 	width: 100%;
 	border: none;
 }
@@ -123,7 +123,9 @@
 	font-size: 1rem;
 }
 
+/* Estilos originales */
 
+/* ... Código CSS anterior ... */
 
 .form-input-btn:hover {
 	cursor: pointer;
@@ -235,7 +237,6 @@
 
 	.form-input-btn {
 		height: 40px;
-		font-size: 0.9rem;
+		font-size: 0.9rem;
 	}
 }
-

@@ -1,36 +1,47 @@
 import React, { useState } from "react";
-import "./FormIngresarServicio.css";
-import Header from "../Header/HeaderAdmin";
+import { useLocation } from "react-router-dom";
+import Header from "../../Header/HeaderAdmin";
+import "../../forms/FormIngresarServicio.css";
+import { useNavigate } from "react-router-dom";
 
-const FormIngresarServicio = () => {
-  const [FotoLink, setFotoLink] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [precio, setPrecio] = useState("");
+
+const EditarServicio = () => {
+  const location = useLocation();
+  const { item } = location.state;
+  const [FotoLink, setFotoLink] = useState(item.FotoLink);
+  const [descripcion, setDescripcion] = useState(item.Descripcion);
+  const [precio, setPrecio] = useState(item.Precio);
+  const navigate = useNavigate();
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(FotoLink);
-
+  
     // Mostrar ventana emergente de confirmación
-    const confirmed = window.confirm("¿Estás seguro ingresar este servicio?");
-
+    const confirmed = window.confirm("¿Estás seguro de editar este Servicio?");
+  
     if (confirmed) {
-      // Realizar la solicitud POST con los datos
-      fetch("http://localhost:3001/insertar-servicios", {
-        method: "POST",
-        body: JSON.stringify({ descripcion, precio, FotoLink }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      // Realizar la solicitud PUT con los datos
+      fetch(`http://localhost:3001/editar-servicio/${item.ServicioID}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          descripcion,
+          precio,
+          FotoLink
+        }),
       })
         .then((response) => response.text())
-        .then((result) => alert(result))
+        .then((result) => {
+          alert(result);
+          // Redireccionar a "/admin" después de realizar las acciones
+          navigate("/ver-servicio");
+  
+          setDescripcion("");
+          setFotoLink("");
+          setPrecio("");
+        })
         .catch((error) => console.log(error));
-
-      // Restablecer los campos del formulario
-      setFotoLink("");
-      setDescripcion("");
-      setPrecio("");
     }
   };
 
@@ -39,7 +50,7 @@ const FormIngresarServicio = () => {
       <Header />
       <div className="formulario-container">
         <div className="card">
-          <h2 className="agendar-h2">Ingresar Servicio</h2>
+          <h2 className="agendar-h2">Editar Servicio</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="urlImagen">URL de la imagen:</label>
@@ -74,7 +85,7 @@ const FormIngresarServicio = () => {
                 required
               />
             </div>
-            <button type="submit">Agregar Servicio</button>
+            <button type="submit">Editar Servicio</button>
           </form>
         </div>
       </div>
@@ -82,4 +93,4 @@ const FormIngresarServicio = () => {
   );
 };
 
-export default FormIngresarServicio;
+export default EditarServicio;

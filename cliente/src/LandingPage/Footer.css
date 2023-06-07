@@ -1,0 +1,20 @@
+.footer {
+	background-color: #000000;
+	color: #ffffff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 2rem;
+	width: 95.8%;
+  }
+  
+  .column {
+	padding: 1rem;
+	text-align: center;
+  }
+
+  .logo-img {
+	width: 200px; /* Ajusta el tamaño según tus necesidades */
+	height: auto; /* Permite que la altura se ajuste automáticamente */
+}
+  

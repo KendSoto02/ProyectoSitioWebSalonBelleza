@@ -1,16 +1,11 @@
-export default function validateInfo(values) {
+export default function validateInfo(username, password) {
   let errors = {};
 
-  if (!values.nombre) {
-    return "El nombre es requerido";
-  } else   if (isNaN(values.telefono)) {
-    return 'Información no valida, ingrese su nombre y apellido';
-  } 
-  if (!values.nombre) {
-    return "El nombre es requerido";
-  } else   if (!isNaN(values.telefono)) {
-    return 'Información no valida, ingrese el numero de telofono';
-  } 
+  if(username === 'Lady' && password === '123456'){
+    return true;
+  }else {
+    return false;
+  }
 
 //   if (!values.email) {
 //     errors.email = "Debe ingresar un email";

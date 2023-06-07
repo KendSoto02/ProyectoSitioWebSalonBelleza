@@ -1,56 +1,104 @@
 .formulario-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-  }
-  
-  .card {
-	width: 400px;
-	padding: 40px;
-	border: 1px solid #e8c3c9;
-	border-radius: 4px;
-	background-color: #f9e9ec;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #e5dddd;
+}
+
+.card {
+  width: 400px;
+  padding: 40px;
+  border-radius: 8px;
+  background-color: #f9e9ec;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+.agendar-h2 {
 	margin-top: 0;
 	margin-bottom: 20px;
 	text-align: center;
 	color: #de387d;
-  }
-  
-  .form-group {
-	margin-bottom: 20px;
-  }
-  
-  label {
-	display: block;
-	margin-bottom: 5px;
-	color: #de387d;
-  }
-  
-  input[type="file"],
-  input[type="text"],
-  input[type="number"] {
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-  }
-  
-  button[type="submit"] {
-	width: 100%;
-	padding: 10px;
-	background-color: #de387d;
-	color: #fff;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-  }
-  
-  button[type="submit"]:hover {
-	background-color: #bf185b;
-  }
-  
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #de387d;
+}
+
+input[type="file"],
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9e9ec;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1), inset -4px -4px 8px rgba(255, 255, 255, 0.5);
+}
+
+select {
+  appearance: none;
+  background-color: #f9e9ec;
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 30px;
+}
+
+.form-fecha,
+.form-hora {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.form-fecha label,
+.form-hora label {
+  margin-right: 10px;
+  color: #de387d;
+}
+
+.form-fecha input[type="date"],
+.form-hora input[type="time"] {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f9e9ec;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1), inset -4px -4px 8px rgba(255, 255, 255, 0.5);
+}
+
+.form-fecha input[type="date"] {
+  width: 200px;
+}
+
+.form-hora input[type="time"] {
+  width: 150px;
+}
+
+
+button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #f9e9ec;
+  color: #de387d;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #de387d;
+  color: #f9e9ec;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+

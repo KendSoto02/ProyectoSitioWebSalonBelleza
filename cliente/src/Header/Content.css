@@ -1,0 +1,26 @@
+  .content {
+    background-color: #220117;
+    color: white;
+    padding: 20px;
+    justify-content: center;
+  }
+  
+  @media (max-width: 768px) {
+    .content {
+      padding: 10px;
+    }
+  }
+  
+  .sub-container {
+    display: flex;
+    justify-content: center;
+    background-color: #F1A2EE;
+    padding: 1px;
+    border-radius: 100px;
+    margin: 10px;
+    margin-left: 50px;
+    margin-right: 50px;
+    color: black;
+  }
+  
+  
