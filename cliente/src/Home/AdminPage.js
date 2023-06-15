@@ -33,13 +33,9 @@ const AdminPage = () => {
         a.NombreCliente.localeCompare(b.NombreCliente)
       );
     } else if (filter === "fecha-antigua") {
-      filteredResult.sort(
-        (a, b) => new Date(a.FechaHora) - new Date(b.FechaHora)
-      );
+      filteredResult.sort((a, b) => a.Fecha.localeCompare(b.Fecha));
     } else if (filter === "fecha-reciente") {
-      filteredResult.sort(
-        (a, b) => new Date(b.FechaHora) - new Date(a.FechaHora)
-      );
+      filteredResult.sort((a, b) => b.Fecha.localeCompare(a.Fecha));
     } else if (filter === "servicio") {
       filteredResult.sort((a, b) => a.Descripcion.localeCompare(b.Descripcion));
     } else if (filter === "corte-hombre") {
@@ -55,6 +51,7 @@ const AdminPage = () => {
         item.Descripcion.toLowerCase().includes("pintar pelo")
       );
     }
+ 
 
     setFilteredData(filteredResult);
   };
@@ -101,8 +98,8 @@ const AdminPage = () => {
           >
             <option value="">Todos</option>
             <option value="nombre">Nombre por orden alfabetico (A-Z)</option>
-            <option value="fecha-antigua">Fecha (Más antigua)</option>
-            <option value="fecha-reciente">Fecha (Más reciente)</option>
+            <option value="fecha-antigua">Fecha (Más reciente)</option>
+            <option value="fecha-reciente">Fecha (Más antigua)</option>
             <option value="servicio">Servicios:</option>
             <option value="corte-hombre">- Corte de cabello Hombre</option>
             <option value="corte-mujer">- Corte de cabello mujer</option>
@@ -114,9 +111,12 @@ const AdminPage = () => {
             <div key={item.ReservarCitaID} className="data-item">
               <h3>Nombre: {item.NombreCliente}</h3>
               <p>Contacto: {item.MedioContactoCliente}</p>
-              <p>Fecha Hora: {item.FechaHora}</p>
+              <p>Correo: {item.Correo}</p>
+              <p>Fecha: {item.Fecha}</p>
+              <p>Hora: {item.Hora}</p>
               <p>Servicio: {item.Descripcion}</p>
               <p>Producto: {item.NombreProducto}</p>
+              <p>Estado: {item.Estado}</p>
               <button
                 className="delete-button"
                 onClick={() => eliminarCita(item.ReservarCitaID)}

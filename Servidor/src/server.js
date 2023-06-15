@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const sql = require('mssql');
+const nodemailer = require('nodemailer');
 
 const app = express();
 
@@ -44,11 +45,15 @@ const config = {
 //   });
 // });
 
+// 
+
 app.post('/enviar-datos', (req, res) => {
   // Obtener los datos enviados en la solicitud
-  const { nombre, telefono, fechaHora, servicio, producto } = req.body;
+  const { nombre, telefono, fecha, hora, servicio, producto, correo } = req.body;
 
   // Conectar a la base de datos y llamar al stored procedure
+  console.log(hora); // Imprime la hora en la consola para verificar que se haya capturado correctamente
+
   sql.connect(config, err => {
     if (err) {
       console.log(err);
@@ -58,14 +63,18 @@ app.post('/enviar-datos', (req, res) => {
       request.input('servicio', sql.NVarChar(50), servicio);
       request.input('producto', sql.NVarChar(50), producto);
       request.input('NombreCliente', sql.NVarChar(50), nombre);
-      request.input('MedioContactoCliente', sql.NVarChar(50), telefono);
-      request.input('FechaHora', sql.DateTime, fechaHora);
+      request.input('MedioContactoCliente', sql.Int, telefono);
+      request.input('Fecha', sql.Date, fecha);
+      request.input('Nhora', sql.NVarChar(30), hora);
+      request.input('Correo', sql.NVarChar(320), correo); 
+
       request.execute('AgendarCita', (err, result) => {
         if (err) {
           console.log(err);
           res.status(500).send('Error de servidor');
         } else {
-          res.status(200).send('Su cita fue agendada correctamente');
+          res.status(200).send(`Su cita fue agendada correctamente ${nombre}`);
+          // enviarCorreoConfirmacion(req.body);
         }
       });
     }
@@ -290,7 +299,7 @@ app.put('/editar-reservacion/:id', (req, res) => {
   const reservarCitaID = req.params.id;
 
   // Obtener los datos enviados en la solicitud
-  const { nombre, telefono, fechaHora, servicio, producto } = req.body;
+  const { nombre, telefono, fecha, hora, servicio, producto, correo, citaActiva } = req.body;
 
   // Conectar a la base de datos y llamar al stored procedure
   sql.connect(config, err => {
@@ -304,7 +313,10 @@ app.put('/editar-reservacion/:id', (req, res) => {
       request.input('producto', sql.NVarChar(50), producto);
       request.input('NombreCliente', sql.NVarChar(50), nombre);
       request.input('MedioContactoCliente', sql.Int, telefono);
-      request.input('FechaHora', sql.DateTime, fechaHora);
+      request.input('Fecha', sql.Date, fecha);
+      request.input('Nhora', sql.NVarChar(30), hora);
+      request.input('Correo', sql.NVarChar(320), correo);
+      request.input('CitaActiva', sql.Bit, citaActiva);
       request.execute('EditarReservacion', (err, result) => {
         if (err) {
           console.log(err);
@@ -383,6 +395,40 @@ app.put('/editar-servicio/:id', (req, res) => {
 });
 
 
+async function enviarCorreoConfirmacion(datos) {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.office365.com',
+      port: 587,
+      secure: false, // Usar TLS
+      auth: {
+        user: 'sotofajardo02@outlook.com',
+        pass: ''
+      }
+    });
+
+    const correoOptions = {
+      from: 'sotofajardo02@outlook.com',
+      to: datos.correo,
+      subject: 'Confirmación de cita agendada',
+      html: `
+        <h1>Gracias por agendar tu cita ${datos.nombre}</h1>
+        <p>Recorda la fecha y hora</p>
+        <ul>
+          <li>Fecha: ${datos.fecha}</li>
+          <li>Hora: ${datos.hora}</li>
+        </ul>
+        <p>Te esperamos en la cita.</p>
+      `
+    };
+
+    await transporter.sendMail(correoOptions);
+    console.log('Correo de confirmación enviado');
+  } catch (error) {
+    console.log(error);
+    throw new Error('Ocurrió un error al enviar el correo de confirmación');
+  }
+}
 
 // Iniciar el servidor Node.js
 const port = 3001;

@@ -9,49 +9,74 @@ const EditarReservacion = () => {
   const { item } = location.state;
   const navigate = useNavigate();
 
-  const [fecha, setFecha] = useState(item.FechaHora.substring(0, 10)); // Obtiene los primeros 10 caracteres que representan la fecha
-  const [hora, setHora] = useState(item.FechaHora.substring(11, 16)); // Obtiene los caracteres de 11 a 16 que representan la hora
   const [nombre, setNombre] = useState(item.NombreCliente);
   const [telefono, setTelefono] = useState(item.MedioContactoCliente);
   const [servicio, setServicio] = useState(item.Descripcion);
   const [producto, setProducto] = useState(item.NombreProducto);
+  const [hora, setHora] = useState(item.Hora);
+  const [correo, setCorreo] = useState(item.Correo);
+  const [citaActiva, setCitaActiva] = useState(item.Estado);
+
+  const formatDate = (inputDate) => {
+    const parts = inputDate.split("/"); // Dividir la cadena de fecha en partes: día, mes, año
+    const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; // Reorganizar las partes en el formato deseado: año-mes-día
+    return formattedDate;
+  };
+
+  const formattedFecha = formatDate(item.Fecha);
+  const [fecha, setFecha] = useState(formattedFecha);
 
   const enviarDatos = (e) => {
     e.preventDefault();
 
-    // Validar que no haya campos en blanco
+    const confirmed =
+      window.confirm(`¿Estás segura(o) que quieres editar la reservación con los siguientes datos?
+    \nNombre: ${nombre}
+    \nTeléfono: ${telefono}
+    \nCorreo: ${correo}
+    \nFecha: ${fecha}
+    \nHora: ${hora}
+    \nServicio: ${servicio}
+    \nProducto: ${producto}`);
 
-    // Combina la fecha y la hora en un solo campo
-    const fechaHora = new Date(`${fecha}T${hora}`);
-    // Convierte la fecha y hora en formato ISO 8601 para que sea compatible con SQL Server
-    const fechaHoraISO = fechaHora.toISOString();
+    if (confirmed) {
+      // Validar que no haya campos en blanco
+      var citaFormateada = 1;
+      if (citaActiva === "Inactiva") {
+        citaFormateada = 0;
+      }
 
-    fetch(`http://localhost:3001/editar-reservacion/${item.ReservarCitaID}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nombre,
-        telefono,
-        fechaHora: fechaHoraISO,
-        servicio,
-        producto,
-      }),
-    })
-      .then((response) => response.text())
-      .then((result) => {
-        alert(result);
-        // Redireccionar a "/admin" después de realizar las acciones
-        navigate("/admin");
+      const horaFormateada = hora + ":00.000";
+      fetch(`http://localhost:3001/editar-reservacion/${item.ReservarCitaID}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre,
+          telefono,
+          fecha,
+          hora: horaFormateada,
+          servicio,
+          producto,
+          correo,
+          citaActiva: citaFormateada,
+        }),
       })
-      .catch((error) => console.log(error));
+        .then((response) => response.text())
+        .then((result) => {
+          alert(result);
+          // Redireccionar a "/admin" después de realizar las acciones
+          navigate("/admin");
+        })
+        .catch((error) => console.log(error));
 
-    // Restablecer los campos después de enviar los datos
-    setNombre("");
-    setTelefono("");
-    setFecha("");
-    setHora("");
-    setServicio("");
-    setProducto("");
+      // Restablecer los campos después de enviar los datos
+      setNombre("");
+      setTelefono("");
+      setFecha("");
+      setHora("");
+      setServicio("");
+      setProducto("");
+    }
   };
 
   return (
@@ -85,6 +110,18 @@ const EditarReservacion = () => {
                 required
               />
             </div>
+            <div className="form-group">
+              <label htmlFor="correo">Correo electrónico:</label>
+              <input
+                type="email"
+                id="correo"
+                name="correo"
+                placeholder="Ingresar correo electrónico"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+                required
+              />
+            </div>
 
             <div className="form-group">
               <label htmlFor="servicio">Servicio:</label>
@@ -96,7 +133,7 @@ const EditarReservacion = () => {
                 required
               >
                 <option value="">Seleccionar servicio</option>
-                <option value="Corte de Cabello Hombre">
+                <option value="Corte de cabello Hombre">
                   Corte de cabello para Hombre
                 </option>
                 <option value="Corte de Cabello Mujer">
@@ -146,7 +183,21 @@ const EditarReservacion = () => {
                 onChange={(e) => setHora(e.target.value)}
                 required
               />
+              <div className="form-group">
+                <label htmlFor="citaActiva">Estado:</label>
+                <select
+                  id="CitaActiva"
+                  name="CitaActiva"
+                  value={citaActiva}
+                  onChange={(e) => setCitaActiva(e.target.value)}
+                  required
+                >
+                  <option value="Activa">Activa</option>
+                  <option value="Inactiva">Inactiva</option>
+                </select>
+              </div>
             </div>
+
             <button type="submit">Editar Cita</button>
           </form>
         </div>

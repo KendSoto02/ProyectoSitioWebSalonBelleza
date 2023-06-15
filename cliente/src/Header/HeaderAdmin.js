@@ -52,6 +52,9 @@ const Header = () => {
             )}
           </li>
           <li>
+            <Link to="/estadisticas">Estadisticas</Link>
+          </li>
+          <li>
             <Link to="/AdminLogIn">Salir</Link>
           </li>
         </ul>

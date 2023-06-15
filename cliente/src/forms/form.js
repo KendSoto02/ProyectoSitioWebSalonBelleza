@@ -9,49 +9,65 @@ const FormularioAgendarCita = ({ submitForm }) => {
   const [hora, setHora] = useState("");
   const [servicio, setServicio] = useState("");
   const [producto, setProducto] = useState("");
+  const [correo, setCorreo] = useState("");
 
-  const enviarDatos = (e) => {
+  const enviarDatos = async (e) => {
     e.preventDefault();
 
     // Validar que no haya campos en blanco
-    if (
-      nombre.trim() === "" ||
-      telefono.trim() === "" ||
-      fecha.trim() === "" ||
-      hora.trim() === "" ||
-      servicio.trim() === ""
-    ) {
-      alert("Por favor, asegúrate de llenar todos los campos");
+    if (!nombre || !telefono || !fecha || !hora || !servicio) {
+      alert("Por favor, complete todos los campos.");
       return;
     }
 
     // Combina la fecha y la hora en un solo campo
-    const fechaHora = new Date(`${fecha}T${hora}`);
-    // Convierte la fecha y hora en formato ISO 8601 para que sea compatible con SQL Server
-    const fechaHoraISO = fechaHora.toISOString();
+    const confirmed = window.confirm(`¿Estás segura(o) ${nombre} de agendar la cita con los siguientes datos?
+    \nNombre: ${nombre}
+    \nTeléfono: ${telefono}
+    \nCorreo: ${correo}
+    \nFecha: ${fecha}
+    \nHora: ${hora}
+    \nServicio: ${servicio}
+    \nProducto: ${producto}`);
 
-    fetch("http://localhost:3001/enviar-datos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nombre,
-        telefono,
-        fechaHora: fechaHoraISO,
-        servicio,
-        producto,
-      }),
-    })
-      .then((response) => response.text())
-      .then((result) => alert(result))
-      .catch((error) => console.log(error));
+    
+    if (confirmed) {
+      const horaFormateada = hora + ":00.000";
 
-    // Restablecer los campos después de enviar los datos
-    setNombre("");
-    setTelefono("");
-    setFecha("");
-    setHora("");
-    setServicio("");
-    setProducto("");
+      try {
+        const response = await fetch("http://localhost:3001/enviar-datos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nombre,
+            telefono,
+            fecha,
+            hora: horaFormateada,
+            servicio,
+            producto,
+            correo,
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.text();
+          alert(result);
+          // Restablecer los campos después de enviar los datos
+          setNombre("");
+          setTelefono("");
+          setFecha("");
+          setHora("");
+          setServicio("");
+          setProducto("");
+          setCorreo("");
+        } else {
+          throw new Error("Error de servidor");
+        }
+      } catch (error) {
+        console.log(error);
+        alert("Error de servidor");
+      }
+    }
   };
 
   return (
@@ -85,6 +101,18 @@ const FormularioAgendarCita = ({ submitForm }) => {
                 required
               />
             </div>
+            <div className="form-group">
+              <label htmlFor="correo">Correo electrónico:</label>
+              <input
+                type="email"
+                id="correo"
+                name="correo"
+                placeholder="Ingresar correo electrónico"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+                required
+              />
+            </div>
 
             <div className="form-group">
               <label htmlFor="servicio">Servicio:</label>
@@ -96,13 +124,14 @@ const FormularioAgendarCita = ({ submitForm }) => {
                 required
               >
                 <option value="">Seleccionar servicio</option>
-                <option value="Corte de Cabello Hombre">
+                <option value="Corte de cabello Hombre">
                   Corte de cabello para Hombre
                 </option>
                 <option value="Corte de Cabello Mujer">
                   Corte de Cabello Mujer
                 </option>
-                <option value="Pintar Pelo">Pintar Pelo</option>
+                <option value="Pintar pelo">Pintar Pelo</option>
+                <option value="Uñas">Uñas</option>
               </select>
             </div>
             <div className="form-group">
@@ -112,9 +141,8 @@ const FormularioAgendarCita = ({ submitForm }) => {
                 name="producto"
                 value={producto}
                 onChange={(e) => setProducto(e.target.value)}
-                required
               >
-                <option value="Nada">Seleccionar producto</option>
+                <option value="">Seleccionar producto</option>
                 <option value="Jabon">Jabon</option>
                 <option value="Colonia Mujer">Colonia Mujer</option>
                 <option value="Crema de Piel">Crema de Piel</option>

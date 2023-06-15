@@ -14,7 +14,7 @@ import EditarProducto from "./Home/EditData/EditarProducto";
 import EditarServicio from "./Home/EditData/EditarServicio";
 import VerProductos from "./Home/ShowCatalog/VerProductos";
 import VerServicios from "./Home/ShowCatalog/VerServicios";
-
+import Dashboard from "./Home/Estadistics/Dashboard";
 function App() {
   return (
     <div className="App">
@@ -81,20 +81,21 @@ function App() {
             <Route
               path="/ver-producto"
               element={
-                <RutaPrivada
-                  path="/ver-producto"
-                  element={<VerProductos />}
-                />
+                <RutaPrivada path="/ver-producto" element={<VerProductos />} />
               }
             />
 
             <Route
               path="/ver-servicio"
               element={
-                <RutaPrivada
-                  path="/ver-servicio"
-                  element={<VerServicios />}
-                />
+                <RutaPrivada path="/ver-servicio" element={<VerServicios />} />
+              }
+            />
+
+            <Route
+              path="/estadisticas"
+              element={
+                <RutaPrivada path="/estadisticas" element={<Dashboard />} />
               }
             />
           </Routes>
