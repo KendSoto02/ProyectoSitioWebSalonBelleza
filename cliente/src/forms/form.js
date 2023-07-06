@@ -15,68 +15,97 @@ const FormularioAgendarCita = ({ submitForm }) => {
     setHora(""); // Restablece el valor de la hora a vacío
   };
   const fechaActual = new Date();
-  fechaActual.setDate(fechaActual.getDate() - 1);
+  fechaActual.setDate(fechaActual.getDate());
   const fechaAnterior = fechaActual.toISOString().split("T")[0];
   const [dataService, setDataService] = useState([]);
   const [dataProduct, setDataProduct] = useState([]);
   const [dataHours, setDataHours] = useState([]);
 
   const generarOpcionesDeHora = () => {
-    const horasExcluidas =  dataHours.map((item) => item.Hora);
     const opciones = [];
     const horaActual = new Date().getHours() + 1;
     const horaInicial = 8;
     const horaFinal = 17;
+    if (fechaAnterior === fecha) {
+      const horasExcluidas = dataHours.map((item) => item.Hora);
+      for (let hora = horaInicial; hora <= horaFinal; hora++) {
+        const horaFormateada = `${hora.toString().padStart(2, "0")}:00`;
+        if (
+          horasExcluidas.some((horaExcluida) =>
+            horaExcluida.startsWith(`${hora.toString().padStart(2, "0")}:`)
+          )
+        ) {
+          continue; // Salta a la siguiente iteración si la hora está excluida
+        }
 
-    for (let hora = horaInicial; hora <= horaFinal; hora++) {
-      const horaFormateada = `${hora.toString().padStart(2, "0")}:00`;
-
-      if (
-        horasExcluidas.some((horaExcluida) =>
-          horaExcluida.startsWith(`${hora.toString().padStart(2, "0")}:`)
-        )
-      ) {
-        continue; // Salta a la siguiente iteración si la hora está excluida
+        if (hora >= horaActual) {
+          opciones.push(horaFormateada);
+        }
       }
-
-      if (hora >= horaActual) {
-        opciones.push(horaFormateada);
+    } else {
+      for (let hora = horaInicial; hora <= horaFinal; hora++) {
+        const horaFormateada = `${hora.toString().padStart(2, "0")}:00`;
+        if (hora >= horaActual) {
+          opciones.push(horaFormateada);
+        }
       }
     }
-
     return opciones;
   };
-  
+
   const generarOpcionesDeMediaHora = () => {
-    const horasExcluidas = dataHours.map((item) => item.Hora); // Horas a excluir
     const opciones = [];
     const horaActual = new Date().getHours();
     const minutosActuales = new Date().getMinutes();
     const horaInicial = 8;
     const horaFinal = 17;
-  
-    for (let hora = horaInicial; hora <= horaFinal; hora++) {
-      const horaFormateada = `${hora.toString().padStart(2, "0")}:00`;
-      const mediaHoraFormateada = `${hora.toString().padStart(2, "0")}:30`;
-  
-      if (hora === horaFinal && horasExcluidas.includes(mediaHoraFormateada)) {
-        break; // Detiene el bucle si la última media hora está excluida
-      }
-  
-      if (hora >= horaActual || (hora === horaActual && minutosActuales < 30)) {
-        if (!horasExcluidas.includes(horaFormateada)) {
-          opciones.push(horaFormateada);
+
+    if (fechaAnterior === fecha) {
+      const horasExcluidas = dataHours.map((item) => item.Hora);
+      for (let hora = horaInicial; hora <= horaFinal; hora++) {
+        const horaFormateada = `${hora.toString().padStart(2, "0")}:00`;
+        const mediaHoraFormateada = `${hora.toString().padStart(2, "0")}:30`;
+
+        if (
+          hora === horaFinal &&
+          horasExcluidas.includes(mediaHoraFormateada)
+        ) {
+          break; // Detiene el bucle si la última media hora está excluida
+        }
+
+        if (
+          hora >= horaActual ||
+          (hora === horaActual && minutosActuales < 30)
+        ) {
+          if (!horasExcluidas.includes(horaFormateada)) {
+            opciones.push(horaFormateada);
+          }
+        }
+
+        if (!horasExcluidas.includes(mediaHoraFormateada)) {
+          opciones.push(mediaHoraFormateada);
         }
       }
-  
-      if (!horasExcluidas.includes(mediaHoraFormateada)) {
-        opciones.push(mediaHoraFormateada);
+    } else {
+      for (let hora = horaInicial; hora <= horaFinal; hora++) {
+        const horaFormateada = `${hora.toString().padStart(2, "0")}:00`;
+        const mediaHoraFormateada = `${hora.toString().padStart(2, "0")}:30`;
+
+        if (hora === horaFinal) {
+          break; // Detiene el bucle si es la última hora
+        }
+
+        if (
+          hora >= horaActual ||
+          (hora === horaActual && minutosActuales < 30)
+        ) {
+          opciones.push(horaFormateada);
+          opciones.push(mediaHoraFormateada);
+        }
       }
     }
-  
-    return opciones;
-  };
-
+    return opciones;
+  };
   const enviarDatos = async (e) => {
     e.preventDefault();
 
@@ -148,7 +177,9 @@ const FormularioAgendarCita = ({ submitForm }) => {
 
   const getDataHours = async () => {
     try {
-      const response = await fetch("http://localhost:3001/ObtenerHorasCitasActivas");
+      const response = await fetch(
+        "http://localhost:3001/ObtenerHorasCitasActivas"
+      );
       const data = await response.json();
       setDataHours(data);
     } catch (error) {
@@ -275,7 +306,6 @@ const FormularioAgendarCita = ({ submitForm }) => {
     );
   };
 
-
   return (
     <div>
       <HeaderLandingPage />
@@ -320,8 +350,8 @@ const FormularioAgendarCita = ({ submitForm }) => {
               />
             </div>
 
-           <Servicio />
-           <Producto />
+            <Servicio />
+            <Producto />
             {DevolverFechaHora()}
             <button type="submit">Agendar Cita</button>
           </form>
