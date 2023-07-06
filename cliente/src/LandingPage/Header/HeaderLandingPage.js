@@ -68,11 +68,4 @@ const HeaderLandingPage = () => {
 };
 
 
-// <a
-//           href="https://www.youtube.com/leomessi/"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           <FaYoutube className="social-icon youtube-icon"/>
-//         </a>
 export default HeaderLandingPage;

@@ -13,39 +13,13 @@ app.use(cors());
 // Configuración de la conexión a la base de datos
 const config = {
   user: 'Lady',
-  password: 'lady12345',
+  password: '1234',
   server: 'localhost',
   database: 'Proyecto_Salon_Belleza',
   port: 1433,
   encrypt: false
 };
 
-// Ruta para manejar las solicitudes POST
-// app.post('/enviar-datos', (req, res) => {
-//   // Obtener los datos enviados en la solicitud
-//   const { nombre, telefono } = req.body;
-
-//   // Conectar a la base de datos y guardar los datos
-//   sql.connect(config, err => {
-//     if (err) {
-//       console.log(err);
-//       res.status(500).send('Error de servidor');
-//     } else {
-//       const request = new sql.Request();
-//       const query = `INSERT INTO formulario (nombre, telefono) VALUES ('${nombre}', '${telefono}')`;
-//       request.query(query, (err, result) => {
-//         if (err) {
-//           console.log(err);
-//           res.status(500).send('Error de servidor');
-//         } else {
-//           res.status(200).send('Datos guardados correctamente');
-//         }
-//       });
-//     }
-//   });
-// });
-
-// 
 
 app.post('/enviar-datos', (req, res) => {
   // Obtener los datos enviados en la solicitud
@@ -74,7 +48,7 @@ app.post('/enviar-datos', (req, res) => {
           res.status(500).send('Error de servidor');
         } else {
           res.status(200).send(`Su cita fue agendada correctamente ${nombre}`);
-          // enviarCorreoConfirmacion(req.body);
+          enviarCorreoConfirmacion(req.body);
         }
       });
     }
@@ -161,9 +135,6 @@ app.delete('/eliminar-producto/:id', (req, res) => {
 
 
 
-
-
-
 // Ruta para manejar las solicitudes GET
 app.get('/obtener-datos', (req, res) => {
   // Conectar a la base de datos y obtener los datos
@@ -185,6 +156,70 @@ app.get('/obtener-datos', (req, res) => {
     }
   });
 });
+
+app.get('/ObtenerServicio', (req, res) => {
+  // Conectar a la base de datos y obtener los datos
+  sql.connect(config, err => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error de servidor');
+    } else {
+      const request = new sql.Request();
+      const query = 'EXEC ObtenerServicio';  // Llamada al procedimiento almacenado
+      request.query(query, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Error de servidor');
+        } else {
+          res.status(200).json(result.recordset);
+        }
+      });
+    }
+  });
+});
+
+app.get('/ObtenerProducto', (req, res) => {
+  // Conectar a la base de datos y obtener los datos
+  sql.connect(config, err => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error de servidor');
+    } else {
+      const request = new sql.Request();
+      const query = 'EXEC ObtenerProducto';  // Llamada al procedimiento almacenado
+      request.query(query, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Error de servidor');
+        } else {
+          res.status(200).json(result.recordset);
+        }
+      });
+    }
+  });
+});
+
+app.get('/ObtenerHorasCitasActivas', (req, res) => {
+  // Conectar a la base de datos y obtener los datos
+  sql.connect(config, err => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error de servidor');
+    } else {
+      const request = new sql.Request();
+      const query = 'EXEC ObtenerHorasCitasActivas';  // Llamada al procedimiento almacenado
+      request.query(query, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Error de servidor');
+        } else {
+          res.status(200).json(result.recordset);
+        }
+      });
+    }
+  });
+});
+
 
 
 // Ruta para manejar las solicitudes GET para servicios
@@ -231,6 +266,70 @@ app.get('/ObtenerProductos', (req, res) => {
   });
 });
 
+
+app.get('/DiasSolicitados', (req, res) => {
+  // Conectar a la base de datos y obtener los datos
+  sql.connect(config, err => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error de servidor');
+    } else {
+      const request = new sql.Request();
+      const query = 'EXEC DiasMasSolicitados';  // Llamada al procedimiento almacenado
+      request.query(query, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Error de servidor');
+        } else {
+          res.status(200).json(result.recordset);
+        }
+      });
+    }
+  });
+});
+
+app.get('/ProductosSolicitados', (req, res) => {
+  // Conectar a la base de datos y obtener los datos
+  sql.connect(config, err => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error de servidor');
+    } else {
+      const request = new sql.Request();
+      const query = 'EXEC ProductosMasSolicitados';  // Llamada al procedimiento almacenado
+      request.query(query, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Error de servidor');
+        } else {
+          res.status(200).json(result.recordset);
+        }
+      });
+    }
+  });
+});
+
+
+app.get('/ServiciosSolicitados', (req, res) => {
+  // Conectar a la base de datos y obtener los datos
+  sql.connect(config, err => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error de servidor');
+    } else {
+      const request = new sql.Request();
+      const query = 'EXEC ServiciosMasSolicitados';  // Llamada al procedimiento almacenado
+      request.query(query, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Error de servidor');
+        } else {
+          res.status(200).json(result.recordset);
+        }
+      });
+    }
+  });
+});
 
 app.post('/insertar-servicios', (req, res) => {
   // Obtener los datos del cuerpo de la solicitud
@@ -403,7 +502,7 @@ async function enviarCorreoConfirmacion(datos) {
       secure: false, // Usar TLS
       auth: {
         user: 'sotofajardo02@outlook.com',
-        pass: ''
+        pass: 'AbyKend0927'
       }
     });
 

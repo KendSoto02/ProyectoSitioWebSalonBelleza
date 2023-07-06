@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import GraficoPastel from "./GraficoPastel";
 import Header from "../../Header/HeaderAdmin";
 import "./Dashoard.css";
 import GraficoBarras from "./GraficoBarras";
 import GraficoBarrasServicio from "./GraficoBarrasServicios";
 const Dashboard = () => {
+  
   return (
     <div>
       <Header />

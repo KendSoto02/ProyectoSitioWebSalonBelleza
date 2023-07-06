@@ -3,17 +3,19 @@
 	border-radius: 10px;
 	box-shadow: 10px 10px 20px #c7c7c7, -10px -10px 20px #ffffff;
 	padding: 20px;
-	width: 500px;
-	height: 600px;
-  }
-  
+	width: 100%;
+	max-width: 500px;
+	height: auto;
+	margin: 0 auto;
+}
 
-  .dashboard-container {
+.dashboard-container {
 	display: flex;
-  }
-  
-  .column {
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.column {
 	flex: 1;
 	margin: 10px;
-  }
-  
+}

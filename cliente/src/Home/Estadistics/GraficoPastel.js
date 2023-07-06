@@ -4,29 +4,28 @@ import "./Dashoard.css"; // Importa el archivo CSS
 
 const GraficoPastel = () => {
   const [chartData, setChartData] = useState(null);
+  const [data, setData] = useState([]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const getData = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/ProductosSolicitados");
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const fetchData = () => {
-    const dummyData = [
-      { DiaSemana: "Lunes", Frecuencia: 10 },
-      { DiaSemana: "Martes", Frecuencia: 8 },
-      { DiaSemana: "Miércoles", Frecuencia: 5 },
-      { DiaSemana: "Jueves", Frecuencia: 12 },
-      { DiaSemana: "Viernes", Frecuencia: 15 },
-    ];
-
-    const labels = dummyData.map((item) => item.DiaSemana);
-    const data = dummyData.map((item) => item.Frecuencia);
+  const createChartData = () => {
+    const labels = data.map((item) => item.Producto);
+    const datos = data.map((item) => item.Seleccionados);
     const backgroundColors = ["#FF6384", "#36A2EB", "#FFCE56", "#33FF99", "#FF9900"];
 
     const chartData = {
       labels,
       datasets: [
         {
-          data,
+          data: datos,
           backgroundColor: backgroundColors,
           hoverBackgroundColor: backgroundColors,
         },
@@ -36,9 +35,19 @@ const GraficoPastel = () => {
     setChartData(chartData);
   };
 
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      createChartData();
+    }
+  }, [data]);
+
   return (
     <section className="pie-chart-container">
-      <h1>Dashboard</h1>
+      <h1>Productos mas vendidos</h1>
       {chartData && (
         <Pie
           data={chartData}

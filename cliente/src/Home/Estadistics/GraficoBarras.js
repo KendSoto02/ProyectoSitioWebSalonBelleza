@@ -1,36 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bar, Chart } from "react-chartjs-2";
 import "chart.js/auto";
 
-const GraficoBarras = () => {
+const GraficoBarrasServicio = () => {
+  const [data, setData] = useState([]);
+
+  const getData = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/DiasSolicitados");
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const labels = data.map((item) => item.DiaSemana);
+  const datos = data.map((item) => item.Frecuencia);
+  const backgroundColors = [
+    "#FF6384",
+    "#36A2EB",
+    "#FFCE56",
+    "#33FF99",
+    "#FF9900",
+    "#CDA776",
+    "#F7464A",
+    "#46BFBD",
+    "#FDB45C",
+    "#949FB1",
+  ];
+
   const chartData = {
-    labels: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+    labels: labels,
     datasets: [
       {
-        label: "Cantidad",
-        data: [10, 8, 5, 12, 15],
-        backgroundColor: "#FF6384",
+        label: "Demanda Diaria",
+        data: datos,
+        backgroundColor: backgroundColors.slice(0, data.length),
       },
     ],
   };
 
   const chartOptions = {
-    maintainAspectRatio: false, // Desactiva el mantenimiento del aspecto del gráfico
-    responsive: true, // Permite que el gráfico se ajuste al contenedor
+    maintainAspectRatio: false,
+    responsive: true,
     scales: {
       y: {
-        min: 0, // Establece el valor mínimo del eje y
-        max: 20, // Establece el valor máximo del eje y
+        min: 0,
+        max: Math.max(...datos) + 10,
       },
     },
   };
 
   return (
-    <div style={{ width: "450px", height: "330px" }}> {/* Establece el tamaño deseado */}
-      <h2>Dias más demandados</h2>
+    <div style={{ width: "450px", height: "330px" }}>
+      <h2>Dias de la semana mas demandados</h2>
       <Bar data={chartData} options={chartOptions} />
     </div>
   );
 };
 
-export default GraficoBarras;
+export default GraficoBarrasServicio;
